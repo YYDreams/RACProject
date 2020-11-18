@@ -121,7 +121,6 @@
         _categoryView.titleColorGradientEnabled = YES;
         _categoryView.contentScrollViewClickTransitionAnimationEnabled = NO;
         _categoryView.titles = @[@"全部",@"待付款",@"待发货",@"待收货",@"已完成"];
-        
         JXCategoryIndicatorLineView *lineView = [[JXCategoryIndicatorLineView alloc] init];
         lineView.indicatorColor = kThemeColor;
         lineView.indicatorWidth = 16.f;

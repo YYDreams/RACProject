@@ -21,6 +21,10 @@
 //网络错误
 @property(nonatomic ,strong , readwrite) RACReplaySubject *networkErrorSubject;
 
+//努力连接中 请重试
+@property(nonatomic ,strong , readwrite) RACReplaySubject *connectingSubject;
+
+
 @end
 
 @implementation BaseViewModel
@@ -50,6 +54,13 @@
     }
     return _networkErrorSubject;
 }
+- (RACReplaySubject *)connectingSubject{
+    if (!_connectingSubject) {
+        _connectingSubject = [RACReplaySubject subject];
+    }
+    return _networkErrorSubject;
+}
+
 - (void)bindModel{}
 
 @end

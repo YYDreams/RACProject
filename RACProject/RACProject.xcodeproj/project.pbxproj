@@ -3,10 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CE624362565443100C68C60 /* HHGoodsInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE624352565443100C68C60 /* HHGoodsInfoModel.m */; };
+		1CE6243925654A0400C68C60 /* HHSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6243825654A0400C68C60 /* HHSearchController.m */; };
+		1CE6243C25654A1100C68C60 /* HHSearchResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6243B25654A1100C68C60 /* HHSearchResultController.m */; };
+		1CE6243F25654A2900C68C60 /* HHSearchResultViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6243E25654A2900C68C60 /* HHSearchResultViewModel.m */; };
+		1CE6244325654AA200C68C60 /* HHSearchResultHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6244225654AA200C68C60 /* HHSearchResultHeaderView.m */; };
 		24C54009135DDAF128FAD45E /* libPods-RACProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4DCA47376C6269F3EF530A9 /* libPods-RACProject.a */; };
 		3ECBCE522776C75A389E6C05 /* libPods-RACProjectUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 612ACC9BA2AB50C56CA6D33F /* libPods-RACProjectUITests.a */; };
 		7881F0382453FD970002563C /* orderList.json in Resources */ = {isa = PBXBuildFile; fileRef = 7881F0372453FD970002563C /* orderList.json */; };
@@ -116,6 +121,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1CE624342565443100C68C60 /* HHGoodsInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHGoodsInfoModel.h; sourceTree = "<group>"; };
+		1CE624352565443100C68C60 /* HHGoodsInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHGoodsInfoModel.m; sourceTree = "<group>"; };
+		1CE6243725654A0400C68C60 /* HHSearchController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHSearchController.h; sourceTree = "<group>"; };
+		1CE6243825654A0400C68C60 /* HHSearchController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHSearchController.m; sourceTree = "<group>"; };
+		1CE6243A25654A1100C68C60 /* HHSearchResultController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHSearchResultController.h; sourceTree = "<group>"; };
+		1CE6243B25654A1100C68C60 /* HHSearchResultController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHSearchResultController.m; sourceTree = "<group>"; };
+		1CE6243D25654A2900C68C60 /* HHSearchResultViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHSearchResultViewModel.h; sourceTree = "<group>"; };
+		1CE6243E25654A2900C68C60 /* HHSearchResultViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHSearchResultViewModel.m; sourceTree = "<group>"; };
+		1CE6244125654AA200C68C60 /* HHSearchResultHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHSearchResultHeaderView.h; sourceTree = "<group>"; };
+		1CE6244225654AA200C68C60 /* HHSearchResultHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHSearchResultHeaderView.m; sourceTree = "<group>"; };
 		1E9638A6109C4390B6BB8BF9 /* Pods-RACProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProject.release.xcconfig"; path = "Target Support Files/Pods-RACProject/Pods-RACProject.release.xcconfig"; sourceTree = "<group>"; };
 		612ACC9BA2AB50C56CA6D33F /* libPods-RACProjectUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RACProjectUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7444BB934780F169FDB2CFA6 /* Pods-RACProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProjectTests.release.xcconfig"; path = "Target Support Files/Pods-RACProjectTests/Pods-RACProjectTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -331,6 +346,78 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1CE6242D2565439D00C68C60 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				1CE6242E2565439D00C68C60 /* ViewModel */,
+				1CE6242F2565439D00C68C60 /* Controller */,
+				1CE624302565439D00C68C60 /* Model */,
+				1CE624312565439D00C68C60 /* View */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		1CE6242E2565439D00C68C60 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				1CE6243D25654A2900C68C60 /* HHSearchResultViewModel.h */,
+				1CE6243E25654A2900C68C60 /* HHSearchResultViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1CE6242F2565439D00C68C60 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				1CE6243725654A0400C68C60 /* HHSearchController.h */,
+				1CE6243825654A0400C68C60 /* HHSearchController.m */,
+				1CE6243A25654A1100C68C60 /* HHSearchResultController.h */,
+				1CE6243B25654A1100C68C60 /* HHSearchResultController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		1CE624302565439D00C68C60 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1CE624312565439D00C68C60 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1CE6244125654AA200C68C60 /* HHSearchResultHeaderView.h */,
+				1CE6244225654AA200C68C60 /* HHSearchResultHeaderView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1CE62432256543DB00C68C60 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				1CE6244025654A5200C68C60 /* View */,
+				1CE62433256543F400C68C60 /* Model */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		1CE62433256543F400C68C60 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1CE624342565443100C68C60 /* HHGoodsInfoModel.h */,
+				1CE624352565443100C68C60 /* HHGoodsInfoModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1CE6244025654A5200C68C60 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		7881F0332453FD560002563C /* json */ = {
 			isa = PBXGroup;
 			children = (
@@ -402,6 +489,7 @@
 		78A630302451D7E0005578E1 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				1CE62432256543DB00C68C60 /* Common */,
 				78A6303C2451D7E1005578E1 /* AppDelegate */,
 				78A6303D2451D7E1005578E1 /* Base */,
 				78A630312451D7E0005578E1 /* Classes */,
@@ -700,6 +788,7 @@
 		78A630922451EB96005578E1 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				1CE6242D2565439D00C68C60 /* Search */,
 				78A630942451EBA4005578E1 /* Login */,
 			);
 			path = Other;
@@ -1253,16 +1342,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RACProject/Pods-RACProject-resources.sh",
-				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-RACProject/Pods-RACProject-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-RACProject/Pods-RACProject-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1293,6 +1377,7 @@
 				78A630772451DE4B005578E1 /* BaseCollectionViewController+PageStatus.m in Sources */,
 				78A6319A2453D4F0005578E1 /* JXCategoryTitleVerticalZoomView.m in Sources */,
 				78A630882451E392005578E1 /* HomeViewController.m in Sources */,
+				1CE6243925654A0400C68C60 /* HHSearchController.m in Sources */,
 				78A631C22453D4F1005578E1 /* JXPagerView.m in Sources */,
 				78A6308B2451E3A8005578E1 /* MineViewController.m in Sources */,
 				78A631B62453D4F1005578E1 /* JXCategoryFactory.m in Sources */,
@@ -1303,6 +1388,7 @@
 				78A631982453D4F0005578E1 /* JXCategoryTitleVerticalZoomCellModel.m in Sources */,
 				78A631A02453D4F0005578E1 /* JXCategoryIndicatorComponentView.m in Sources */,
 				78A631C32453D4F1005578E1 /* JXPagerSmoothView.m in Sources */,
+				1CE6244325654AA200C68C60 /* HHSearchResultHeaderView.m in Sources */,
 				78A631AF2453D4F0005578E1 /* JXCategoryImageView.m in Sources */,
 				78A631BB2453D4F1005578E1 /* JXCategoryBaseView.m in Sources */,
 				78A631A92453D4F0005578E1 /* JXCategoryTitleImageView.m in Sources */,
@@ -1315,6 +1401,8 @@
 				78A630B62453C80B005578E1 /* HHMyOrderController.m in Sources */,
 				78A631BA2453D4F1005578E1 /* UIColor+JXAdd.m in Sources */,
 				7881F03E245407130002563C /* HHOrderListModel.m in Sources */,
+				1CE624362565443100C68C60 /* HHGoodsInfoModel.m in Sources */,
+				1CE6243F25654A2900C68C60 /* HHSearchResultViewModel.m in Sources */,
 				78A630762451DE4B005578E1 /* BaseNavViewController.m in Sources */,
 				78A630722451DE4B005578E1 /* BaseTableViewController.m in Sources */,
 				78A631AD2453D4F0005578E1 /* JXCategoryTitleCell.m in Sources */,
@@ -1322,6 +1410,7 @@
 				78A631AA2453D4F0005578E1 /* JXCategoryTitleImageCell.m in Sources */,
 				78A631C72453D8FF005578E1 /* HHOrderListCell.m in Sources */,
 				78A6305F2451DC3E005578E1 /* HHConstUrl.m in Sources */,
+				1CE6243C25654A1100C68C60 /* HHSearchResultController.m in Sources */,
 				78A6319F2453D4F0005578E1 /* JXCategoryIndicatorBallView.m in Sources */,
 				78A631B42453D4F1005578E1 /* JXCategoryNumberCellModel.m in Sources */,
 				78A631AB2453D4F0005578E1 /* JXCategoryTitleImageCellModel.m in Sources */,

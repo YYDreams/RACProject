@@ -21,8 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 //缺省页
 @property(nonatomic ,strong , readonly) RACReplaySubject *noDataSubject;
 
-//网络错误
+//网络异常，请尝试刷新
 @property(nonatomic ,strong , readonly) RACReplaySubject *networkErrorSubject;
+
+//努力连接中 请重试
+@property(nonatomic ,strong , readonly) RACReplaySubject *connectingSubject;
+
+
 
 
 
