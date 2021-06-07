@@ -28,10 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong , readonly) RACReplaySubject *connectingSubject;
 
 
-
-
-
-
 - (void)bindModel;
 
 @end

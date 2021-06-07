@@ -7,7 +7,7 @@
 //
 
 #import "HomeViewController.h"
-
+#import "LoginViewController.h"
 @interface HomeViewController ()
 
 @end
@@ -22,8 +22,9 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     
-    
-    
+    LoginViewController *vc = [[LoginViewController alloc]init];
+    vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    [self presentViewController:vc animated:true completion:nil];
 }
 
 

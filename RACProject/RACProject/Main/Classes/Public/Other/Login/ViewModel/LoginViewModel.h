@@ -14,9 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic , readonly, copy) NSString * account;
 @property (nonatomic , readonly, copy) NSString * password;
-
-
 @property (nonatomic , strong) RACSignal *loginBtnEnableSignal;
+
 @end
 
 NS_ASSUME_NONNULL_END

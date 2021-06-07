@@ -37,4 +37,5 @@
 #import "BaseTableViewController+PageStatus.h"
 #import "BaseCollectionViewController+PageStatus.h"
 #import "PublicView.h"
+#import "HHHudManager.h"
 #endif /* PrefixHeader_pch */

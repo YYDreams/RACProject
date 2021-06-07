@@ -10,7 +10,6 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import "AFHTTPSessionManager+Config.h"
-#import "MBProgressHUD+LYProgressHUD.h"
 #import "HTTPRequest+NotLogin.h"
 #import <ifaddrs.h>
 #import <arpa/inet.h>
@@ -102,7 +101,7 @@
     
     //配置公共参数
     parameter = [AFHTTPSessionManager configBaseParmars:parameter];
-  NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
        NSLog(@"urlString: %@ --\n parameter%@",urlString,parameter);
               
               NSString *response = nil;
@@ -172,7 +171,7 @@
     }
     
     [HTTPRequest showActive];
-    NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"urlString: %@ --\n parameter%@",urlString,parameter);
         
         NSHTTPURLResponse* urlresponse = (NSHTTPURLResponse* )task.response;
@@ -206,181 +205,6 @@
     LYRequestModel *requestModel = [LYRequestModel newWithTask:task];
     return requestModel;
 }
-
-+ (LYRequestModel *)GET:(NSString *)urlString parameter:(NSDictionary *)parameter success:(requestSuccessCallBack)success failure:(requestErrorCallBack)failue view:(UIView*)view progressHubShow:(BOOL)show
-{
-    AFHTTPSessionManager *manager = [HTTPRequest requestManager];
-    //[HTTPRequest setCookie];
-    //配置公共参数
-    //    parameter = [AFHTTPSessionManager configBaseParmars:parameter];
-    
-    if (show) [MBProgressHUD LY_ShowHUD:view animation:YES];
-    
-       NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-           
-        if (show) [MBProgressHUD LY_HideHUDForView:view];
-        
-        if (responseObject&&[responseObject isKindOfClass:[NSDictionary class]])
-        {
-            
-            [HTTPRequest handelSuccessRequest:task responseObject:responseObject success:success fail:failue];
-        }
-        else
-        {
-            NSError * error = [NSError errorWithDomain:@"服务器出错了" code:-100 userInfo:@{@"message":@"服务器返回的不是json或者是空对象"}];
-            [HTTPRequest handelFailRequest:task err:error fail:failue];
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (show) [MBProgressHUD LY_HideHUDForView:view];
-        [HTTPRequest handelFailRequest:task err:error fail:failue];
-    }];
-    
-    LYRequestModel *requestModel = [LYRequestModel newWithTask:task];
-    return requestModel;
-}
-
-+ (LYRequestModel *)POST:(NSString *)urlString parameter:(NSDictionary *)parameter  success:(requestSuccessCallBack)success failure:(requestErrorCallBack)failue view:(UIView*)view progressHubShow:(BOOL)show;
-{
-    AFHTTPSessionManager *manager = [HTTPRequest requestManager];
-    //[HTTPRequest setCookie];
-    [HTTPRequest showActive];
-    if (show) [MBProgressHUD LY_ShowHUD:view animation:YES];
-    //配置公共参数
-    //    parameter = [AFHTTPSessionManager configBaseParmars:parameter];
-    
-   NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (show) [MBProgressHUD LY_HideHUDForView:view];
-        if (responseObject&&[responseObject isKindOfClass:[NSDictionary class]])
-        {
-            [HTTPRequest handelSuccessRequest:task responseObject:responseObject success:success fail:failue];
-        }
-        else
-        {
-            NSError * error = [NSError errorWithDomain:@"服务器出错了" code:-100 userInfo:@{@"message":@"服务器返回的不是json或者是空对象"}];
-            [HTTPRequest handelFailRequest:task err:error fail:failue];
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (show) [MBProgressHUD LY_HideHUDForView:view];
-        [HTTPRequest handelFailRequest:task err:error fail:failue];
-    }];
-    
-    LYRequestModel *requestModel = [LYRequestModel newWithTask:task];
-    return requestModel;
-    
-}
-
-
-
-+(void)UPLOAD:(NSString*)url image:(UIImage *)image parameter:(id)parameter  progress:(void(^)(CGFloat progress))progres        success:(void (^)(id responseOBj))success
-      failure:(void (^)(NSError *error))failure{
-    
-    
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
-    
-    NSLog(@"%@-----%zd",imageData, imageData.length);
-    if (imageData.length>1024*1024) {
-        
-        imageData = UIImageJPEGRepresentation(image, 1024.0f *1024.0f/(CGFloat)imageData.length);
-    }
-    
-    
-    //    AFHTTPSessionManager *manager = [self requestManager];
-    
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    //  [manager.requestSerializer setValue:LH.token forHTTPHeaderField:@"token"];
-    
-    
-    //申明返回的结果是json类型
-    //        manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    //申明请求的数据是json类型
-    //        manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    manager.requestSerializer.HTTPShouldHandleCookies = YES;
-    
-    
-    //解决不接受类型为"text/html"
-    //如果报接受类型不一致请替换一致text/html或别的
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",@"text/plain",@"image/jpeg",@"image/png", nil];
-    
-    
-    
-    
-    NSMutableURLRequest *request =[manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self InterfaceUrl:url] parameters:parameter constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        
-        [formData appendPartWithFileData:imageData name:@"file" fileName:@"image.jpg"
-                                mimeType:@"image/jpg"];
-        
-    } error:nil];
-    
-    NSURLSessionUploadTask *uploadTask;
-    uploadTask = [manager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            CGFloat progressValue =(CGFloat)uploadProgress.completedUnitCount/uploadProgress.totalUnitCount;
-            if (progres) {
-                progres(progressValue);
-            }
-            
-        });
-    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        
-        id jsonDic =[NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil];
-        
-        NSDictionary *dic;
-        if ([jsonDic isKindOfClass:[NSArray class]]) {
-            dic =[jsonDic firstObject];
-        }else{
-            dic = jsonDic;
-        }
-        [self hideActive];
-        
-        if (error) {
-            
-            
-        }else{
-            success(dic);
-        }
-    }];
-    [uploadTask resume];
-    
-}
-
-+ (LYRequestModel *)UPLOAD:(NSString *)url uploadParam:(NSDictionary *)uploadParam params:(id)params progress:(void (^)(NSProgress * uploadProgress))progress success:(requestSuccessCallBack)success  failure:(requestErrorCallBack)failure{
-    [HTTPRequest showActive];
-    
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    manager.requestSerializer.HTTPShouldHandleCookies = YES;
-    
-    
-    //解决不接受类型为"text/html"
-    //如果报接受类型不一致请替换一致text/html或别的
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",@"text/plain",@"image/jpeg",@"image/png", nil];
-    
-    //配置公共参数
-    params = [AFHTTPSessionManager configBaseParmars:params];
-    
-    //[HTTPRequest setCookie];
-    
-    NSURLSessionDataTask *task = [manager POST:url parameters:params  constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        for (NSString *key in uploadParam.allKeys) {
-             [formData appendPartWithFileData:uploadParam[key] name:key fileName:[NSString stringWithFormat:@"%@.jpg",key] mimeType:@"image/jpg"];
-         }
-    } progress:progress success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [HTTPRequest handelSuccessRequest:task responseObject:responseObject success:success fail:failure];
-
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [HTTPRequest handelFailRequest:task err:error fail:failure];
-
-    }];
-    
-    LYRequestModel *requestModel = [LYRequestModel newWithTask:task];
-    return requestModel;
-}
-
 
 #pragma mark - 请求处理
 + (void)handelSuccessRequest:(NSURLSessionDataTask * _Nonnull)task responseObject:(id _Nullable)responseObject success:(requestSuccessCallBack)success fail:(requestErrorCallBack)fail{

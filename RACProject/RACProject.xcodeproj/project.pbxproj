@@ -14,6 +14,7 @@
 		1CE6244325654AA200C68C60 /* HHSearchResultHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6244225654AA200C68C60 /* HHSearchResultHeaderView.m */; };
 		24C54009135DDAF128FAD45E /* libPods-RACProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4DCA47376C6269F3EF530A9 /* libPods-RACProject.a */; };
 		3ECBCE522776C75A389E6C05 /* libPods-RACProjectUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 612ACC9BA2AB50C56CA6D33F /* libPods-RACProjectUITests.a */; };
+		51A1F93E26626DAA00EC8FA9 /* HHHudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 51A1F93D26626DAA00EC8FA9 /* HHHudManager.m */; };
 		7881F0382453FD970002563C /* orderList.json in Resources */ = {isa = PBXBuildFile; fileRef = 7881F0372453FD970002563C /* orderList.json */; };
 		7881F03B2453FEE60002563C /* RACProjectApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 7881F03A2453FEE60002563C /* RACProjectApi.m */; };
 		7881F03E245407130002563C /* HHOrderListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7881F03D245407130002563C /* HHOrderListModel.m */; };
@@ -99,7 +100,6 @@
 		78A631E22453E76B005578E1 /* HTTPRequest+NotLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A631DC2453E769005578E1 /* HTTPRequest+NotLogin.m */; };
 		78A631E32453E76B005578E1 /* AFHTTPSessionManager+Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A631E02453E76B005578E1 /* AFHTTPSessionManager+Config.m */; };
 		78A631E42453E76B005578E1 /* HTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A631E12453E76B005578E1 /* HTTPRequest.m */; };
-		78A631E72453E82A005578E1 /* MBProgressHUD+LYProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A631E52453E82A005578E1 /* MBProgressHUD+LYProgressHUD.m */; };
 		D87C334E4D5545AE0040D530 /* libPods-RACProjectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0E6E02CC5F58C090547059B /* libPods-RACProjectTests.a */; };
 /* End PBXBuildFile section */
 
@@ -132,6 +132,8 @@
 		1CE6244125654AA200C68C60 /* HHSearchResultHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHSearchResultHeaderView.h; sourceTree = "<group>"; };
 		1CE6244225654AA200C68C60 /* HHSearchResultHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHSearchResultHeaderView.m; sourceTree = "<group>"; };
 		1E9638A6109C4390B6BB8BF9 /* Pods-RACProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProject.release.xcconfig"; path = "Target Support Files/Pods-RACProject/Pods-RACProject.release.xcconfig"; sourceTree = "<group>"; };
+		51A1F93C26626DAA00EC8FA9 /* HHHudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HHHudManager.h; sourceTree = "<group>"; };
+		51A1F93D26626DAA00EC8FA9 /* HHHudManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HHHudManager.m; sourceTree = "<group>"; };
 		612ACC9BA2AB50C56CA6D33F /* libPods-RACProjectUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RACProjectUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7444BB934780F169FDB2CFA6 /* Pods-RACProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProjectTests.release.xcconfig"; path = "Target Support Files/Pods-RACProjectTests/Pods-RACProjectTests.release.xcconfig"; sourceTree = "<group>"; };
 		765028D2AE6CBE75C659B49A /* Pods-RACProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProject.debug.xcconfig"; path = "Target Support Files/Pods-RACProject/Pods-RACProject.debug.xcconfig"; sourceTree = "<group>"; };
@@ -309,8 +311,6 @@
 		78A631DF2453E76A005578E1 /* AFHTTPSessionManager+Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFHTTPSessionManager+Config.h"; sourceTree = "<group>"; };
 		78A631E02453E76B005578E1 /* AFHTTPSessionManager+Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFHTTPSessionManager+Config.m"; sourceTree = "<group>"; };
 		78A631E12453E76B005578E1 /* HTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRequest.m; sourceTree = "<group>"; };
-		78A631E52453E82A005578E1 /* MBProgressHUD+LYProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+LYProgressHUD.m"; sourceTree = "<group>"; };
-		78A631E62453E82A005578E1 /* MBProgressHUD+LYProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+LYProgressHUD.h"; sourceTree = "<group>"; };
 		97A5D8494D864FF71C11D377 /* Pods-RACProjectUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProjectUITests.release.xcconfig"; path = "Target Support Files/Pods-RACProjectUITests/Pods-RACProjectUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A7AAE6D8ECD9FE04CDEF703A /* Pods-RACProjectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RACProjectTests.debug.xcconfig"; path = "Target Support Files/Pods-RACProjectTests/Pods-RACProjectTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C4DCA47376C6269F3EF530A9 /* libPods-RACProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RACProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -718,8 +718,6 @@
 		78A6304C2451D7E1005578E1 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				78A631E62453E82A005578E1 /* MBProgressHUD+LYProgressHUD.h */,
-				78A631E52453E82A005578E1 /* MBProgressHUD+LYProgressHUD.m */,
 				78A631DF2453E76A005578E1 /* AFHTTPSessionManager+Config.h */,
 				78A631E02453E76B005578E1 /* AFHTTPSessionManager+Config.m */,
 				78A631DE2453E76A005578E1 /* HTTPRequest.h */,
@@ -799,6 +797,8 @@
 			children = (
 				78A6309A2451ECE7005578E1 /* PublicView.h */,
 				78A6309B2451ECE7005578E1 /* PublicView.m */,
+				51A1F93C26626DAA00EC8FA9 /* HHHudManager.h */,
+				51A1F93D26626DAA00EC8FA9 /* HHHudManager.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1367,7 +1367,6 @@
 				78A631B72453D4F1005578E1 /* JXCategoryCollectionView.m in Sources */,
 				78A631E42453E76B005578E1 /* HTTPRequest.m in Sources */,
 				78A6307F2451DE79005578E1 /* BaseCell.m in Sources */,
-				78A631E72453E82A005578E1 /* MBProgressHUD+LYProgressHUD.m in Sources */,
 				78A631B02453D4F1005578E1 /* JXCategoryImageCell.m in Sources */,
 				78A631CA2453E47E005578E1 /* HHOrderListViewModel.m in Sources */,
 				78A630A22451F2F0005578E1 /* BaseViewModel.m in Sources */,
@@ -1406,6 +1405,7 @@
 				78A630762451DE4B005578E1 /* BaseNavViewController.m in Sources */,
 				78A630722451DE4B005578E1 /* BaseTableViewController.m in Sources */,
 				78A631AD2453D4F0005578E1 /* JXCategoryTitleCell.m in Sources */,
+				51A1F93E26626DAA00EC8FA9 /* HHHudManager.m in Sources */,
 				78A6305C2451DC2F005578E1 /* HHConst.m in Sources */,
 				78A631AA2453D4F0005578E1 /* JXCategoryTitleImageCell.m in Sources */,
 				78A631C72453D8FF005578E1 /* HHOrderListCell.m in Sources */,

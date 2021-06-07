@@ -24,20 +24,14 @@
     
 }
 
-- (void)bindModel{
-    
-    
-}
+- (void)bindModel{}
 - (RACSignal *)loginBtnEnableSignal{
     if (!_loginBtnEnableSignal) {
         _loginBtnEnableSignal = [RACSignal combineLatest:@[RACObserve(self, account),RACObserve(self, password)] reduce:^id _Nonnull{
-           
             return @(self.account.length && self.password.length);
-            
         }];
     }
     return _loginBtnEnableSignal;
 }
-
 
 @end
