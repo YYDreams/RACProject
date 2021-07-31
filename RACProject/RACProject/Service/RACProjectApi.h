@@ -7,22 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-typedef NS_ENUM(NSInteger,NetworkStatus){
-    NetworkStatusSuccess = 1,
-    NetworkStatusFailed = 2,
-    NetworkStatusError = 3,
-    
-};
-
-
+#import "HHOrderListModel.h"
+#import "HHConst.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RACProjectApi : NSObject
 
++ (void)getOderListModelsWithOrderStatus:(NSInteger)orderStatus
+                                 pageNum:(NSInteger)pageNum
+                             orderScense:(NSInteger)orderScene
+                              completion:(void(^)(NetworkStatus status,
+                                                  NSString * _Nullable errorStr,
+                                                  HHOrderListModel * _Nullable model))completion;
 
-//用于模拟网络请求
-+(void)requestForOrderListSimulationWithCompletion:(void(^)(NetworkStatus status,NSArray *listArr, NSDictionary *pageInfo))completion;
-                                                 
+
 @end
 
 NS_ASSUME_NONNULL_END

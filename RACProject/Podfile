@@ -9,7 +9,6 @@ pod 'AFNetworking'
 pod 'MJRefresh'
 pod 'MJExtension'
 pod 'ReactiveObjC'
-pod 'TABAnimated'
 
 #pod 'IQKeyboardManager'
 #pod 'SSKeychain'
@@ -17,6 +16,8 @@ pod 'TABAnimated'
 #pod 'JXPagingView/Pager'
 pod 'MBProgressHUD'
 pod 'DZNEmptyDataSet'
+pod "MBProgressHUD"
+pod "lottie-ios", '~> 2.1.4'
 #pod 'WZLBadge'
 
 source 'https://github.com/CocoaPods/Specs.git'

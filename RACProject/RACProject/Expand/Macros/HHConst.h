@@ -34,6 +34,9 @@ UIKIT_EXTERN NSString  * const kAwaitTips;
 //网络断开的提示语
 UIKIT_EXTERN NSString  * const kNoNetworkTips;
 
+//服务器异常
+UIKIT_EXTERN NSString  * const kNetworkErrorTips;
+
 
 
 
@@ -55,6 +58,14 @@ typedef NS_ENUM(NSInteger,PageStatus) {
     PageStatusError,
     PageStatusSucceed
 };
+
+typedef NS_ENUM(NSInteger,NetworkStatus){
+    NetworkStatusSuccess = 1, //网络请求成功
+    NetworkStatusFailed = 2, //网络请求失败
+    NetworkStatusError = 3, // 服务器异常
+    NetworkStatusNonet = 4, //无网络    
+};
+
 
 
 //单例创建

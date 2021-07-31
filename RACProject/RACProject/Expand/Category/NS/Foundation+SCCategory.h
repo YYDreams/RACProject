@@ -16,15 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSMutableArray<ObjectType> (SCCategory)
 
-- (void)sc_addObject:(ObjectType)anObject;
-
-- (void)sc_insertObject:(ObjectType)anObject atIndex:(NSUInteger)index;
-
-- (void)sc_removeObjectAtIndex:(NSUInteger)index;
-
-@end
 
 
 @interface NSDictionary(SCCategory)

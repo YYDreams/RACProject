@@ -15,7 +15,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,assign)UITableViewStyle  tableViewStyle;
 
+
+- (void)showNetworkErrorView;
+
+- (void)hideNetworkErrorView;
+
+- (void)showNoDataView;
+
+- (void)hideNoDataView;
+
+- (void)showNoDataText:(NSString  * _Nullable)text;
+
+
+- (void)showNoDataImageStr:(NSString  *_Nullable)imageStr;
+
+
+- (void)showNoDataText:(NSString  * _Nullable)text imageStr:(NSString  *_Nullable)imageStr;
+
+
+- (void)showLoadingView;
+
+- (void)hideLoadingView;
+
+- (void)showToast:(NSString *)text;
+
+
 @end
+
 
 NS_ASSUME_NONNULL_END
 

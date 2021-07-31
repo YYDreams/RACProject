@@ -27,39 +27,6 @@
 }
 @end
 
-@implementation NSMutableArray (SCCategory)
-
-- (void)sc_addObject:(id)anObject
-{
-    if (anObject) {
-        [self addObject:anObject];
-    }
-    else {
-    }
-}
-
-- (void)sc_insertObject:(id)anObject atIndex:(NSUInteger)index
-{
-    if (anObject) {
-        if (index > [self count]) {
-            index = [self count];
-        }
-        [self insertObject:anObject atIndex:index];
-    }
-    else {
-    }
-}
-
-- (void)sc_removeObjectAtIndex:(NSUInteger)index
-{
-    if (index < [self count]) {
-        [self removeObjectAtIndex:index];
-    }
-    else {
-    }
-}
-
-@end
 
 @implementation NSDictionary (SCCategory)
 

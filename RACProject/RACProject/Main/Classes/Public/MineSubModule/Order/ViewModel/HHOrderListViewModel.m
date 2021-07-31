@@ -11,10 +11,11 @@
 
 @interface HHOrderListCellViewModel()
 
+
 @property (nonatomic, readwrite, copy) NSString * orderId;
 @property (nonatomic, readwrite, copy) NSString * orderNo;
 @property (nonatomic, readwrite, copy) NSString * orderStatusText;
-@property (nonatomic, readwrite, copy) NSString * orderStatusColor;
+@property (nonatomic, readwrite, copy) UIColor * orderStatusColor;
 
 @property (nonatomic, readwrite, copy) NSString * orderDate;
 
@@ -31,17 +32,17 @@
 @property (nonatomic, readwrite, copy) NSString * singleGoodsImage;
 @property (nonatomic, readwrite, copy) NSString * singleGoodsName;
 @property (nonatomic, readwrite, copy) NSString * goodsNum;
-@property (nonatomic, readwrite, copy) NSString * goodsPices;
+@property (nonatomic, readwrite, copy) NSAttributedString * goodsPices;
 @property (nonatomic, readwrite, copy) NSArray<NSString *>  * goodsImages;
 
 @property (nonatomic, readwrite, assign) BOOL isSingleGoods;
 
-@property (nonatomic, strong) HHOrderListModel * model;
+@property (nonatomic, strong) HHOrdersModel * model;
 
 @end
 @implementation HHOrderListCellViewModel
 
-- (instancetype)initWithModel:(HHOrderListModel *)model{
+- (instancetype)initWithModel:(HHOrdersModel *)model{
     
     if (self = [super init]) {
         
@@ -58,20 +59,26 @@
         return [NSString stringWithFormat:@"订单号：%@",value];
         
     }];
-    RAC(self,orderStatusText) = RACObserve(self.model, statusText);
-    RAC(self,orderTime) = RACObserve(self.model, deliveryTimeEnd);
-    //订单状态 0：未付款 1：已付款 2：分拣中 3:配送中 4：已配送 5：已签收 6：退货早请 7：退货中 8：已退货 9：已退货入库 * 10：取消交易
-
-       //  1待付款  0未付款
-       //  2待发货 1：已付款 2：分拣中
-       //  3待收货  3:配送中 4：已配送
-      //   4已完成   5,6,7,8,9,11,12   评价 再次购买
+    
+    RAC(self,orderStatusText) = RACObserve(self.model, orderStatusName);
+    
+    RAC(self, orderTime) = [RACObserve(self.model , createTime) map:^id _Nullable(id  _Nullable value) {
+        NSDate * date = [NSDate dateWithTimeIntervalSince1970:[value integerValue] / 1000];
+        NSDateFormatter *dateFormat=[[NSDateFormatter alloc]init];
+        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        
+        return [NSString stringWithFormat:@"下单时间：%@",[dateFormat stringFromDate:date]];
+    }];
+    
+    
+    //   orderStatus 订单状态 5: 待支付 10: 待发货 40：待收货 43：待取货 60：已完成 80：已取消
     
     @weakify(self);
     [RACObserve(self.model, orderStatus) subscribeNext:^(id  _Nullable x) {
-      
+        self.orderStatusColor = [UIColor colorWithHex:0x4F5356];
+        
         switch ([x integerValue]) {
-            case 0:{ // 取消 and 去付款
+            case 5:{ // 取消 and 去付款
                 
                 self.button1Title = HHLocalizedString(@"取消订单");
                 self.button2Title = HHLocalizedString(@"去付款");
@@ -82,65 +89,54 @@
                 self.button2Hidden = NO;
             }
                 break;
-            case 1:
+            case 10:
             case 2:
-            case 7:{ //
-                
-                self.button1Hidden = YES;
-                self.button2Hidden = YES;
-                       }
-                           break;
-                case 5:
-                case 6:
-                case 8:
-                case 9:
-                case 11:
-                case 12:{
-                             self.button1Hidden = NO;
-                             self.button2Hidden = NO;
-                             self.button1Title = HHLocalizedString(@"评价");
-                            self.button2Title = HHLocalizedString(@"再次购买");
-                    self.button1Color = kThemeColor;
-                         self.button2Color = kThemeColor;
-            }
                 break;
-            case 10:{
-                self.button1Hidden = YES;
-                self.button2Hidden = NO;
-                self.button2Color = kThemeColor;
-                self.button2Title = HHLocalizedString(@"再次购买");
-            }
             default:
                 break;
         }
         
     }];
     
-    [RACObserve(self.model, orderItems) subscribeNext:^(id  _Nullable x) {
-       @strongify(self);
-        self.isSingleGoods = self.model.orderItems.count == 1;
-      
-        if (self.model.orderItems.count >1) {
-            NSMutableArray *temp = @[].mutableCopy;
-            [self.model.orderItems enumerateObjectsUsingBlock:^(OrderItemsItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                [temp addObject:obj.image];
+    
+    [RACObserve(self.model, orderItemVOs) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        self.isSingleGoods = self.model.orderItemVOs.count == 1;
+        __block NSInteger number = 0;
+        if (self.model.orderItemVOs.count > 1) {
+            NSMutableArray * temp = @[].mutableCopy;
+            NSMutableArray * tempSpuIdList = @[].mutableCopy;
+            [self.model.orderItemVOs enumerateObjectsUsingBlock:^(HHOrderItemVOsItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [temp addObject:obj.goodsPictureUrl];
+                [tempSpuIdList addObject:obj.spuId];
+                number += obj.buyQuantity;
+
+                //赠品数组
+                [obj.giftProducts enumerateObjectsUsingBlock:^(HHGiftProducts *  _Nonnull obj1, NSUInteger idx, BOOL * _Nonnull stop) {
+                    number += obj1.quantity;
+                }];
+                //延保数组
+                [obj.warrantyExtensionList enumerateObjectsUsingBlock:^(HHWarrantyExtensionList *  _Nonnull obj2, NSUInteger idx, BOOL * _Nonnull stop) {
+                    number += obj2.warrantyExtensionNum;
+                }];
             }];
             self.goodsImages = temp.copy;
-            
         }else{
-            
-            OrderItemsItem *signleModel = [self.model.orderItems firstObject];
-            RAC(self,singleGoodsName) = RACObserve(signleModel, name);
-            RAC(self,singleGoodsImage) = RACObserve(signleModel, image);
-            
-            
+            HHOrderItemVOsItem * singleModel = [self.model.orderItemVOs firstObject];
+            RAC(self, singleGoodsName) = RACObserve(singleModel, goodsName);
+            RAC(self, singleGoodsImage) = RACObserve(singleModel, goodsPictureUrl);
+            number += singleModel.buyQuantity;
         }
         
+        self.goodsNum = [NSString stringWithFormat:@"x%ld",(long)number];
+        
+        self.goodsPices = [[NSString removeFloatAllZero:@(self.model.paymentAmount).stringValue style:HHPriceStyleDecimal] rmbWithColor:[UIColor colorWithHex:0x222427]
+                                                                           unitFont:[UIFont systemFontOfSize:13.f weight:UIFontWeightMedium]
+                                                                          priceFont:[UIFont systemFontOfSize:16.f weight:UIFontWeightMedium]
+                                                                  pointSameWithUnit:NO
+                                                                         unitString:@""];;
+        
     }];
-    RAC(self,goodsNum) = RACObserve(self.model, totalCount);
-    self.goodsPices = [NSString stringWithFormat:@"%@",self.model.priceArea.payPriceText];
-           
-//    RAC(self,oderStatusText) = [RACObserve(self.model., )]
     
     
     
@@ -151,7 +147,6 @@
 
 
 @interface HHOrderListViewModel()
-                        
 
 @property(nonatomic ,readwrite , copy)NSArray <HHOrderListCellViewModel *> * orderArray;
 
@@ -169,6 +164,9 @@
 @property(nonatomic, strong)NSArray <HHOrderListModel  *>*dataListArray;
 
 
+@property (nonatomic, copy) NSArray<HHOrdersModel *> * models;
+
+
 @end
 
 @implementation HHOrderListViewModel
@@ -176,13 +174,10 @@
 - (instancetype)initWithoOderStatus:(NSInteger)orderStatus{
     
     if (self  = [super init]) {
-        
-        _orderStatus = orderStatus;
+        self.orderStatus = orderStatus;
         self.page = 1;
         self.isRefreshing = NO;
-        self.isFirstLoading = YES;
         [self bindModel];
-        
         
         
     }
@@ -193,15 +188,15 @@
 - (void)bindModel{
     
     @weakify(self);
-    [RACObserve(self, orderStatus) subscribeNext:^(id  _Nullable x) {
+    
+    [[RACObserve(self, orderStatus) skip:1] subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         [self requsetForOrderListData];
-        
     }];
     
-    [RACObserve(self, dataListArray) subscribeNext:^(id  _Nullable x) {
-       @strongify(self);
-
+    
+    [RACObserve(self, models) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
         [self reformData];
     }];
     
@@ -211,82 +206,73 @@
 - (void)reformData{
     
     NSMutableArray *temp = @[].mutableCopy;
-    [self.dataListArray enumerateObjectsUsingBlock:^(HHOrderListModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.models enumerateObjectsUsingBlock:^(HHOrdersModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         HHOrderListCellViewModel *model = [[HHOrderListCellViewModel alloc]initWithModel:obj];
         [temp addObject:model];
         
     }];
     self.orderArray = temp.copy;
     
-    
-    
 }
 - (void)requsetForOrderListData{
     
     if (!self.isRefreshing) {
-        
         [self.loadingSubject sendNext:@(YES)];
         
     }
-    [RACProjectApi requestForOrderListSimulationWithCompletion:^(NetworkStatus status, NSArray * _Nonnull listArr, NSDictionary * _Nonnull pageInfo) {
-       
-        
-        NSMutableArray *tempArr= listArr.mutableCopy;
-        if (status == NetworkStatusSuccess) {
-
-            if (self.page == 1) {
-                tempArr =  listArr.mutableCopy;
-
-                if (tempArr.count) {
-                    [self.noDataSubject  sendNext:@(NO)];
+    @weakify(self);
+    [RACProjectApi getOderListModelsWithOrderStatus:self.orderStatus pageNum:_page orderScense:0 completion:^(NetworkStatus status, NSString * _Nullable errorStr, HHOrderListModel * _Nullable model) {
+        @strongify(self);
+        NSMutableArray * temp =  self.models.mutableCopy ;
+        switch (status) {
+            case NetworkStatusSuccess:
+                if (self.page == 1) {
+                    temp = model.orders.mutableCopy;
                 }else{
-                    [self.noDataSubject sendNext:@(YES)];
+                    [temp addObjectsFromArray:model.orders.copy];
                 }
-
-
-            }else{
-                [tempArr addObjectsFromArray:listArr];
-            }
-            
-            self.dataListArray = tempArr;
-//            self.page = [pageInfo[@"total"] integerValue];
-//               self.isLastPage = [pageInfo[@"isLastPage"] boolValue];
-
-        }else if( status == NetworkStatusFailed){
-
-            [self.networkErrorSubject sendNext:@(YES)];
+                self.models = temp.copy;
+                self.page = model.pageNum + 1;
+                self.isLastPage = model.totalCount == self.models.count;
+                [self.noDataSubject sendNext:(model.orders.count <= 0)? @(YES):@(NO)];
+                break;
+            case NetworkStatusFailed:
+                [self.totastSubject sendNext:errorStr];
+                break;
+            case NetworkStatusError:
+                [self.connectingSubject sendNext:@(YES)];
+                break;
+            case NetworkStatusNonet:
+                [self.networkErrorSubject sendNext:@(YES)];
+                break;
+            default:
+                break;
         }
         if (!self.isRefreshing) {
             [self.loadingSubject sendNext:@(NO)];
-
         }
     }];
-
-    
-    
 }
-
 
 - (void)refresh{
     self.page = 1;
-    
     self.isRefreshing = YES;
     [self requsetForOrderListData];
 }
 
 - (void)loadMore{
     self.isRefreshing = YES;
-    
     [self requsetForOrderListData];
     
     
 }
 #pragma mark - getter
 
-//- (NSArray<HHOrderListModel *> *)dataListArray{
-//    if (!_dataListArray) {
-//        _dataListArray = @[];
-//    }
-//    return _models;
-//}
+- (NSArray<HHOrdersModel *> *)models{
+    if (!_models) {
+        _models = @[];
+    }
+    return _models;
+}
+
 @end

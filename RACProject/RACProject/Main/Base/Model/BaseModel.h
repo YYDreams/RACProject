@@ -17,11 +17,57 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
+
+
+
+
+
+
 + (instancetype)objectWithDic:(NSDictionary*)dic;
 
 + (NSMutableArray*)objectsInArray:(id)array;
 
 
 @end
+
+
+@interface NetworDataModel: BaseModel
+
+@property(nonatomic,assign) NSInteger pageNum;
+
+@property(nonatomic,assign) NSInteger pageSize;
+
+@property(nonatomic,assign) NSInteger totalCount;
+
+
+@end
+
+@interface NetworkResult : BaseModel
+
+
+@property(nonatomic,strong) NetworDataModel *data;
+
+
+@property(nonatomic,copy) NSString *code;
+
+@property(nonatomic,copy) NSString *msg;
+
+@property(nonatomic,copy) NSString *traceId;
+
+@property(nonatomic,copy) NSString *requestId;
+
+@property(nonatomic,copy) NSString *clientIp;
+
+@property(nonatomic,assign) NSInteger rt;
+
+@property(nonatomic,assign) BOOL success;
+
+
+@end
+
+
+
+
+
 
 NS_ASSUME_NONNULL_END

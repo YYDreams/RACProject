@@ -17,6 +17,7 @@
 
 //第三方
 #import <MJExtension/MJExtension.h>
+#import <MJRefresh/MJRefresh.h>
 
 #import <AFNetworking.h>
 
@@ -34,8 +35,15 @@
 #import "HHConst.h"
 #import "UIView+Category.h"
 #import "Foundation+SCCategory.h"
+#import "NSString+GoodsString.h"
+
 #import "BaseTableViewController+PageStatus.h"
 #import "BaseCollectionViewController+PageStatus.h"
 #import "PublicView.h"
 #import "HHHudManager.h"
+
+#import "HHRefreshFooter.h"
+#import "HHRefreshHeader.h"
+
+
 #endif /* PrefixHeader_pch */

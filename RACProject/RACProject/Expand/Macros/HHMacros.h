@@ -122,7 +122,7 @@ isiPhoneX;\
 //背景色  浅灰色
 #define kBgColor [UIColor colorWithHex:0xF5F5F5]
 //主色 浅红色  如导航栏、商品按钮
-#define kThemeColor   [UIColor colorWithHex:0xEB3349]
+#define kThemeColor   [UIColor colorWithHex:0x00CBA6]
 
 //辅主色
 #define K2FF2CF  [UIColor colorWithHex:0x2FF2CF]

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MineCell : BaseCell
+@interface MineCell : UICollectionViewCell
 
 @end
 

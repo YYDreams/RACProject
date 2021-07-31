@@ -14,7 +14,6 @@
 #import <ifaddrs.h>
 #import <arpa/inet.h>
 //#import "Reachability.h"
-
 @implementation LYRequestModel
 
 + (LYRequestModel *)newWithTask:(id)task{
@@ -45,6 +44,7 @@
         manager = [AFHTTPSessionManager manager];
         [manager configSetting];
         manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
         manager.requestSerializer.HTTPShouldHandleCookies = YES;
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",@"text/plain",@"image/jpeg",@"image/png", nil];
     });
@@ -74,12 +74,18 @@
     return manager;
 }
 
+//返回网络状态
++ (AFNetworkReachabilityStatus)networkReachabilityStatus{
+    return [AFNetworkReachabilityManager sharedManager].networkReachabilityStatus;
+}
+
+
 + (BOOL)isNetworkAvailable{
-//    Reachability *reach = [Reachability reachabilityForInternetConnection];
-//    NetworkStatus status = [reach currentReachabilityStatus];
-//    if (status == ReachableViaWiFi || status == ReachableViaWWAN) {
-//        return YES;
-//    }
+    if ([HTTPRequest networkReachabilityStatus] == AFNetworkReachabilityStatusReachableViaWiFi || [HTTPRequest networkReachabilityStatus] == AFNetworkReachabilityStatusReachableViaWWAN  ) {
+        return YES;
+    }else{
+        return NO;
+    }
     return NO;
 }
 
@@ -94,14 +100,14 @@
 {
     AFHTTPSessionManager *manager = [HTTPRequest requestManager];
     // 如果已有Cookie, 则把你的cookie符上
-    NSString *cookie = [[NSUserDefaults standardUserDefaults] objectForKey:@"Cookie"];
-    if (cookie != nil) {
-        [manager.requestSerializer setValue:cookie forHTTPHeaderField:@"Cookie"];
-    }
+//    NSString *cookie = [[NSUserDefaults standardUserDefaults] objectForKey:@"Cookie"];
+//    if (cookie != nil) {
+//        [manager.requestSerializer setValue:cookie forHTTPHeaderField:@"Cookie"];
+//    }
     
     //配置公共参数
     parameter = [AFHTTPSessionManager configBaseParmars:parameter];
-    NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter headers:[HTTPRequest requestHeader] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
        NSLog(@"urlString: %@ --\n parameter%@",urlString,parameter);
               
               NSString *response = nil;
@@ -140,48 +146,14 @@
 + (LYRequestModel *)POST:(NSString *)urlString  parameter:(NSDictionary *)parameter  success:(requestSuccessCallBack)success failure:(requestErrorCallBack)failue{
     
     AFHTTPSessionManager *manager = [HTTPRequest requestManager];
-//    if ([urlString isEqualToString:kGetProductStockUrl]
-//        || [urlString isEqualToString:kGetTrafficFeeUrl]
-//        || [urlString isEqualToString:kGetProductStockUrl]
-//        || [urlString isEqualToString:kFxyxBuyUrl]
-//        || [urlString isEqualToString:kGetSalePriceUrl]
-//        || [urlString isEqualToString:kSubmitOrderUrl]
-//        || [urlString isEqualToString:kApiSubmitOrderUrl]
-//        || [urlString isEqualToString:kPayorderV2Url]
-//        || [urlString isEqualToString:kAPiPayGoodsOrderUrl]
-//        || [urlString isEqualToString:kShanSongComputationCostUrl]
-//        || [urlString isEqualToString:kShanSongSubmitOrderUrl]
-//        || [urlString isEqualToString:kcheckAreaLimitUrl])
-//    {
-//        //查询库存的接口是必须是json格式方式参数请求 否则报415  后台有毒
-//        manager.requestSerializer = [AFJSONRequestSerializer serializer];
-//    }else{
-//        manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-//    }
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-
     
-    //配置公共参数  直接将token放到里面的  后来token作为请求头了
+    //配置公共参数
     parameter = [AFHTTPSessionManager configBaseParmars:parameter];
     
-    // 如果已有Cookie, 则把你的cookie符上
-    NSString *cookie = [[NSUserDefaults standardUserDefaults] objectForKey:@"Cookie"];
-    if (cookie != nil) {
-        [manager.requestSerializer setValue:cookie forHTTPHeaderField:@"Cookie"];
-    }
-    
     [HTTPRequest showActive];
-    NSURLSessionDataTask *task =   [manager GET:[HTTPRequest InterfaceUrl:urlString] parameters:parameter headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *task =   [manager POST:[HTTPRequest InterfaceUrl:urlString] parameters:parameter headers:[HTTPRequest requestHeader] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"urlString: %@ --\n parameter%@",urlString,parameter);
         
-        NSHTTPURLResponse* urlresponse = (NSHTTPURLResponse* )task.response;
-        NSDictionary *allHeaderFieldsDic = urlresponse.allHeaderFields;
-        NSString *setCookie = allHeaderFieldsDic[@"Set-Cookie"];
-        if (setCookie != nil) {
-            NSString *cookie = [[setCookie componentsSeparatedByString:@";"] objectAtIndex:0];
-            // 这里对cookie进行存储
-            [[NSUserDefaults standardUserDefaults] setObject:cookie forKey:@"Cookie"];
-        }
         
         if ([responseObject isKindOfClass:[NSData class]]) {
             NSString * response = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
@@ -233,51 +205,12 @@
 + (void)handelFailRequest:(NSURLSessionDataTask * _Nonnull)task err:(NSError * _Nullable)err fail:(requestErrorCallBack)fail{
     [self hideActive];
     
-    NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
-    NSInteger statusCode = response.statusCode;
-    
-    NSDictionary *dic = response.allHeaderFields;
-    
-    
-    NSLog(@"errstatusCode %ld===============",statusCode);
-    //如果响应头http状态码是401 则重新登录   501:您已在其他设备登录，如非本人操作，请尽快修改密码
-    if (statusCode == 401 ) {
-        NSLog(@"重新登录--------");
-        BOOL isSingle  =  [HTTPRequest singleLoginWithResult:statusCode msg:@""];
-        if (isSingle){ return; }
-        
-    }else if(statusCode == 501){
-        NSString *time = dic[@"time"];
-        NSString *msgTip  = [HTTPRequest HeaderFieldWithMsg:[dic[@"msg"] integerValue]];
-        NSString *msg = [NSString stringWithFormat:@"您的账号于%@在另一台设备登录。登录方式:%@。如非本人操作，请及时修改密码",time,msgTip];
-        BOOL isSingle  =  [HTTPRequest singleLoginWithResult:statusCode msg:msg];
-        if (isSingle){ return; }
-        
-    }
-    
     if (fail) {
         fail(err);
     }
     
 }
 
-+(NSString *)HeaderFieldWithMsg:(NSInteger)msg{
-    NSString *str;
-    switch (msg) {
-        case 0:
-            str = @"沃银企服公众号";
-            break;
-        case 1:
-            str = @"壹企服APP苹果端";
-            break;
-        case 2:
-            str = @"壹企服APP安卓端";
-            break;
-        default:
-            break;
-    }
-    return str;
-}
 
 #pragma mark - 状态栏网络请求图标
 + (void)showActive {
@@ -288,4 +221,20 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
++ (NSDictionary *)requestHeader{
+    
+    return @{
+             @"apptype":@"ios",
+             @"device-type":@"ios",
+             @"tpg":@"1",
+             @"system-language":@"CN",
+             @"auth-token":@"331723dee4112c07887498beba0e1b8b1859cbaf3a942c063cdfb99b40b9923f",
+             @"app-version" : @"5.0.5387.5387",
+             @"device-id" : @"ed9d2f2303adb733953a4c0e000010914c02",
+             @"device-os-version":@"14.2.1",
+             @"device-name":@"iPhone_12",
+             @"latitude":@"31.239974",
+             @"longitude":@"121.519385"};
+}
 @end
+

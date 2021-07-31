@@ -63,6 +63,8 @@
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
+@property (nonatomic, strong) UIStackView *stackView;
+
 @property (nonatomic, strong) UILabel *multipleCountLabel;
 
 @property (nonatomic, strong) UILabel *multiplePriceLabel;
@@ -75,6 +77,9 @@
 @property (nonatomic, strong) UIButton *button1;
 
 @property (nonatomic, strong) UIButton *button2;
+
+@property (nonatomic, strong) UIView *lineView;
+
 
 @end
 
@@ -93,6 +98,8 @@
 #pragma mark - setupSubView
 - (void)setupSubView{
     
+    [self.contentView addSubview:self.lineView];
+
     [self.contentView addSubview:self.topBgView];
     [self.topBgView addSubview:self.orderNoLabel];
     [self.topBgView addSubview:self.orderStatusLabel];
@@ -106,13 +113,15 @@
     
     [self.contentView addSubview:self.multipleGoodsView];
     [self.multipleGoodsView addSubview:self.collectionView];
-    [self.multipleGoodsView addSubview:self.multipleCountLabel];
-    [self.multipleGoodsView addSubview:self.multiplePriceLabel];
+    [self.multipleGoodsView addSubview:self.stackView];
+    [self.stackView addSubview:self.multipleCountLabel];
+    [self.stackView addSubview:self.multiplePriceLabel];
     
     [self.contentView addSubview:self.bottomView];
     [self.bottomView addSubview:self.createOrderTimeLabel];
     [self.bottomView addSubview:self.button1];
     [self.bottomView addSubview:self.button2];
+    
     
 }
 #pragma mark – Settter Method
@@ -130,11 +139,17 @@
     
     RAC(self.button2,hidden) = [RACObserve(viewModel, button2Hidden) takeUntil:self.rac_prepareForReuseSignal];
     
+    RAC(self.singleTitleLabel,text) = [RACObserve(viewModel, singleGoodsName) takeUntil:self.rac_prepareForReuseSignal];
+    
+    RAC(self.singleCountLabel,text) = [RACObserve(viewModel, goodsNum) takeUntil:self.rac_prepareForReuseSignal];
+    
+    RAC(self.singlePriceLabel,attributedText) = [RACObserve(viewModel, goodsPices) takeUntil:self.rac_prepareForReuseSignal];
     
     @weakify(self);
     [RACObserve(viewModel, singleGoodsImage) subscribeNext:^(id  _Nullable x) {
         @strongify(self);
-        [self.singleImgView sd_setImageWithURL:[NSURL URLWithString:@"https://sam-material-online-1302115363.file.myqcloud.com//sams-static/goods/2609945/4a619892-9055-4671-9ecd-69e48e547eb6_372820200811030527125.jpg"] placeholderImage:nil];
+        [self.singleImgView sd_setImageWithURL:[NSURL URLWithString:viewModel.singleGoodsImage] placeholderImage:nil];
+        
     }];
     
     RAC(self.singleGoodsView, hidden) = [[RACObserve(viewModel, isSingleGoods) takeUntil:self.rac_prepareForReuseSignal] map:^id _Nullable(id  _Nullable value) {
@@ -143,6 +158,9 @@
     
     RAC(self.multipleGoodsView, hidden) = [RACObserve(viewModel, isSingleGoods) takeUntil:self.rac_prepareForReuseSignal];
     
+    RAC(self.multipleCountLabel,text) = [RACObserve(viewModel, goodsNum) takeUntil:self.rac_prepareForReuseSignal];
+    
+    RAC(self.multiplePriceLabel,attributedText) = [RACObserve(viewModel, goodsPices) takeUntil:self.rac_prepareForReuseSignal];
     
     [[RACObserve(viewModel, goodsImages) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(id  _Nullable x) {
         @strongify(self);
@@ -178,10 +196,15 @@
 #pragma mark – setupConstraints
 - (void)setupConstraints{
     
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(12);
+    }];
+    
     [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.left.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.lineView.mas_bottom);
         make.height.mas_equalTo(SC_DP_375(50));
-        
     }];
     
     [self.orderNoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -198,7 +221,6 @@
         make.left.right.mas_equalTo(self.contentView);
         make.top.mas_equalTo(self.topBgView.mas_bottom);
         make.height.mas_equalTo(SC_DP_375(100));
-        
     }];
     
     [self.singleImgView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -207,30 +229,47 @@
         make.width.height.mas_equalTo(SC_DP_375(80));
     }];
     
-    //    [self.singleTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-    //            make.left.mas_equalTo(self.singleImgView.mas_right).mas_offset(SC_DP_375(margin_12));
-    //           make.top.mas_equalTo(self.singleGoodsView).mas_equalTo(SC_DP_375(margin_12));
-    //         make.right.mas_equalTo(self.singleGoodsView);
-    //        }];
-    //    [self.singleCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-    //        make.left.mas_equalTo(self.singleTitleLabel);
-    //        make.bottom.mas_equalTo(self.singleImgView.mas_bottom);
-    //
-    //        }];
-    ////
-    //    [self.singlePriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-    //            make.right.mas_equalTo(self.singleGoodsView.mas_right).mas_offset(SC_DP_375(-margin_12));
-    //        make.top.mas_equalTo(self.singleGoodsView);
-    //        make.bottom.mas_equalTo(self.singleCountLabel);
-    //        }];
-    //
+    [self.singleTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.singleImgView.mas_right).mas_offset(SC_DP_375(margin_12));
+        make.top.mas_equalTo(self.singleGoodsView).mas_equalTo(SC_DP_375(margin_12));
+        make.right.mas_equalTo(self.singleGoodsView);
+    }];
+    
+    [self.singleCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.singleTitleLabel);
+        make.bottom.mas_equalTo(self.singleImgView.mas_bottom);
+    }];
+    
+    [self.singlePriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.singleGoodsView.mas_right).mas_offset(SC_DP_375(-margin_12));
+        make.bottom.mas_equalTo(self.singleCountLabel.mas_bottom);
+    }];
+    
+    
     [self.multipleGoodsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.contentView);
         make.top.mas_equalTo(self.topBgView.mas_bottom);
         make.height.mas_equalTo(SC_DP_375(100));
     }];
+    
+
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.multipleGoodsView);
+        make.left.top.height.mas_equalTo(self.multipleGoodsView);
+        make.right.mas_equalTo(self.stackView.mas_left);
+    }];
+    
+    [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.height.centerY.mas_equalTo(self.multipleGoodsView);
+        make.width.mas_equalTo(100);
+    }];
+    [self.multipleCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.contentView).mas_offset(-margin_12);
+        make.centerY.mas_equalTo(self.multipleGoodsView).mas_offset(-20);
+    }];
+    
+    [self.multiplePriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.multipleCountLabel);
+        make.centerY.mas_equalTo(self.multipleGoodsView);
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -239,23 +278,25 @@
         make.height.mas_equalTo(SC_DP_375(50));
         make.bottom.mas_equalTo(0);
     }];
+    
     [self.createOrderTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.bottomView.mas_left).mas_offset(SC_DP_375(margin_12));
         make.centerY.mas_equalTo(self.bottomView.mas_centerY);
     }];
+    
     [self.button2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(SC_DP_375(-margin));
         make.centerY.mas_equalTo(self.bottomView.mas_centerY);
         make.width.mas_equalTo(SC_DP_375(70));
-        
     }];
+    
     [self.button1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.button2.mas_left).mas_offset(-10);
         make.centerY.mas_equalTo(self.bottomView.mas_centerY);
         make.width.mas_equalTo(self.button2);
     }];
     
-    
+
 }
 
 
@@ -270,7 +311,7 @@
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     HHOderImageCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HHOderImageCell" forIndexPath:indexPath];
-    [cell.image sd_setImageWithURL:[NSURL URLWithString:@"https://sam-material-online-1302115363.file.myqcloud.com//sams-static/goods/2609945/4a619892-9055-4671-9ecd-69e48e547eb6_372820200811030527125.jpg"] placeholderImage:nil];
+    [cell.image sd_setImageWithURL:[NSURL URLWithString:[self.viewModel.goodsImages safeObjectAtIndex:indexPath.row]] placeholderImage:nil];
     return cell;
 }
 
@@ -284,15 +325,13 @@
 }
 - (UILabel *)orderNoLabel{
     if (!_orderNoLabel) {
-        _orderNoLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"我的订单") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                         ];
+        _orderNoLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil];
     }
     return _orderNoLabel;
 }
 - (UILabel *)orderStatusLabel{
     if (!_orderStatusLabel) {
-        _orderStatusLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"我的订单") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                             ];
+        _orderStatusLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil];
     }
     return _orderStatusLabel;
 }
@@ -312,23 +351,21 @@
 
 - (UILabel *)singleTitleLabel{
     if (!_singleTitleLabel) {
-        _singleTitleLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"我的订单") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                             ];
+        _singleTitleLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(13) Color:k3Color BackColor:nil addView:nil];
+        _singleTitleLabel.numberOfLines = 2;
     }
     return _singleTitleLabel;
 }
 - (UILabel *)singleCountLabel{
     if (!_singleCountLabel) {
-        _singleTitleLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"11") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                             ];
+        _singleCountLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil];
     }
-    return _singleTitleLabel;
+    return _singleCountLabel;
 }
 
 - (UILabel *)singlePriceLabel{
     if (!_singlePriceLabel) {
-        _singlePriceLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"20.2") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                             ];
+        _singlePriceLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil];
     }
     return _singlePriceLabel;
 }
@@ -339,16 +376,20 @@
     }
     return _multipleGoodsView;
 }
+- (UIView *)lineView{
+    if (!_lineView) {
+        _lineView = [PublicView ViewFrame:CGRectZero withBackgroundColor:kBgColor addView:nil];
+    }
+    return _lineView;
+}
+
 
 - (UICollectionView *)collectionView{
     if (!_collectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        
         layout.itemSize = CGSizeMake(80, 80);
         layout.minimumLineSpacing = 8.0;
-        //         layout.sectionInset = UIEdgeInsetsMake(8, 10, 0, 10);
-        
         _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.delegate = self;
@@ -362,22 +403,18 @@
     return _collectionView;
 }
 
-
 - (UILabel *)multipleCountLabel{
     if (!_multipleCountLabel) {
-        _multipleCountLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"我的订单") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                               ];
+        _multipleCountLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil];
     }
     return _multipleCountLabel;
 }
 - (UILabel *)multiplePriceLabel{
-    if (!_multipleCountLabel) {
-        _multipleCountLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"11") TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil
-                               ];
+    if (!_multiplePriceLabel) {
+        _multiplePriceLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(15) Color:k3Color BackColor:nil addView:nil];
     }
-    return _multipleCountLabel;
+    return _multiplePriceLabel;
 }
-
 
 - (UIView *)bottomView{
     if (!_bottomView) {
@@ -386,18 +423,16 @@
     return _bottomView;
 }
 
-
-
 - (UILabel *)createOrderTimeLabel{
     if (!_createOrderTimeLabel) {
-        _createOrderTimeLabel = [PublicView LabelFrame:CGRectZero Text:HHLocalizedString(@"我的订单") TextAliType:0 Font:kFont(15) Color:k6Color BackColor:nil addView:nil];
+        _createOrderTimeLabel = [PublicView LabelFrame:CGRectZero Text:nil TextAliType:0 Font:kFont(12) Color:k6Color BackColor:nil addView:nil];
     }
     return _createOrderTimeLabel;
 }
 
 - (UIButton *)button1{
     if (!_button1) {
-        _button1 = [PublicView ButtonFrame:CGRectZero imageName:nil selImageName:nil title:@"全部订单" titleColor:k6Color selTitle:nil selColor:nil target:self action:nil addView:nil];
+        _button1 = [PublicView ButtonFrame:CGRectZero imageName:nil selImageName:nil title:nil titleColor:k6Color selTitle:nil selColor:nil target:self action:nil addView:nil];
         _button1.titleLabel.font = kFont(14);
         
     }
@@ -405,11 +440,20 @@
 }
 - (UIButton *)button2{
     if (!_button2) {
-        _button2 = [PublicView ButtonFrame:CGRectZero imageName:nil selImageName:nil title:@"全部订单" titleColor:k6Color selTitle:nil selColor:nil target:self action:nil addView:nil];
+        _button2 = [PublicView ButtonFrame:CGRectZero imageName:nil selImageName:nil title:nil titleColor:k6Color selTitle:nil selColor:nil target:self action:nil addView:nil];
         _button2.titleLabel.font = kFont(14);
         
     }
     return _button2;
+}
+- (UIStackView *)stackView{
+    if (!_stackView) {
+        _stackView = [[UIStackView alloc]init];
+        _stackView.axis = UILayoutConstraintAxisVertical;
+        _stackView.alignment = UIStackViewAlignmentFill;
+        _stackView.distribution =UIStackViewDistributionFill;
+    }
+    return  _stackView;
 }
 
 

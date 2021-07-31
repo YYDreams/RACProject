@@ -55,8 +55,8 @@
     if (self.childViewControllers.count>0) {
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setImage:[UIImage imageNamed:@"navigationbar_back"] forState:UIControlStateNormal];
-        [btn setImage:[UIImage imageNamed:@"navigationbar_back"] forState:UIControlStateHighlighted];
+        [btn setImage:[UIImage imageNamed:@"nav_back_black"] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:@"nav_back_black"] forState:UIControlStateHighlighted];
         btn.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
         btn.size = CGSizeMake(40, 30);
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;

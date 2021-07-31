@@ -64,7 +64,7 @@
         #endif
         _tableView.emptyDataSetSource = self;
         _tableView.emptyDataSetDelegate = self;
-        self.succeedEmptyStr =@"暂无数据";
+        self.succeedEmptyStr = @"";
         
         self.succeedEmptyImage = [UIImage imageNamed:@"not_data"];
         [self.view addSubview:_tableView];
@@ -108,8 +108,57 @@
 
 
 
+- (void)showNetworkErrorView{
+    self.currentPageStatus = PageStatusError;
+    
+    
+}
 
+- (void)hideNetworkErrorView{
+    self.currentPageStatus = PageStatusError;
+}
 
+- (void)showNoDataView{
+    
+    [self showNoDataText:nil imageStr:nil];
+}
+
+- (void)hideNoDataView{
+    self.currentPageStatus = PageStatusSucceed;
+    self.succeedEmptyStr = @"";
+    self.succeedEmptyImage = [UIImage imageNamed:@""];
+}
+
+- (void)showNoDataText:(NSString  * _Nullable)text{
+    
+    [self showNoDataText:text imageStr:nil];
+}
+- (void)showNoDataImageStr:(NSString  *_Nullable)imageStr{
+    
+    [self showNoDataText:nil imageStr:imageStr];
+}
+
+- (void)showNoDataText:(NSString  * _Nullable)text imageStr:(NSString  *_Nullable)imageStr{
+    self.currentPageStatus = PageStatusSucceed;
+    self.succeedEmptyStr = text.length > 0 ? text :@"暂无数据";
+    self.succeedEmptyImage = [UIImage imageNamed:imageStr.length > 0 ? imageStr : @"mine_background"];
+    [self.tableView reloadEmptyDataSet];
+}
+
+- (void)showLoadingView{
+    
+}
+
+- (void)hideLoadingView{
+    
+}
+
+- (void)showToast:(NSString *)text{
+    
+    if (!text.length) {return;}
+    
+    
+}
 
 @end
 

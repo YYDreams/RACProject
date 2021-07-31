@@ -14,7 +14,8 @@
     return @{@"orderItems":@"OrderItemsItem",
              @"postManInfo":@"PostManInfo",
              @"priceArea":@"PriceArea",
-             @"buttonArea":@"ButtonAreaItem"
+             @"buttonArea":@"ButtonAreaItem",
+             @"orders": @"HHOrdersModel"
     };
 }
 
@@ -22,21 +23,38 @@
 
 @end
 
-@implementation PriceArea
+@implementation HHOrdersModel
+
++ (NSDictionary *)mj_objectClassInArray{
+    return @{@"orderItemVOs":@"HHOrderItemVOsItem",
+             @"giftProducts":@"HHGiftProducts",
+             @"warrantyExtensionList":@"HHWarrantyExtensionList",
+             
+    };
+}
+
+@end
+
+@implementation HHOrderItemVOsItem
+
+
+@end
+
+@implementation HHSpecificationsItem
+
+
+@end
+
+@implementation HHGiftProducts
+
+
+@end
+
+@implementation HHWarrantyExtensionList
+
+
 @end
 
 
-@implementation ButtonAreaItem
-@end
 
 
-@implementation OrderItemsItem
-@end
-
-
-@implementation QualityReport
-@end
-
-
-@implementation PostManInfo
-@end

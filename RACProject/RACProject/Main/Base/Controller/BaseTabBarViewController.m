@@ -31,7 +31,7 @@
     NSArray *selectImageNames = @[@"tabar_software_selected", @"tabar_choice_selected", @"tabar_personalcenter_selected"];
     
     //TabBarItem标题
-    NSArray *titles = @[@"首页",@"精选",@"我的"];
+    NSArray *titles = @[@"首页",@"购物车",@"我的"];
     
     
     for (int i = 0; i< controllerViews.count; i++){

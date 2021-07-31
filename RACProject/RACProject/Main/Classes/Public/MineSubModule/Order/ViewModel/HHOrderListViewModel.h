@@ -12,10 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HHOrderListCellViewModel : BaseViewModel
 
+// 订单号
 @property (nonatomic, readonly, copy) NSString * orderNo;
+// 订单状态
 @property (nonatomic, readonly, copy) NSString * orderStatusText;
-@property (nonatomic, readonly, copy) NSString * orderStatusColor;
-
+// 订单状态样色
+@property (nonatomic, readonly, copy) UIColor * orderStatusColor;
+//下单时间
 @property (nonatomic, readonly, copy) NSString * orderTime;
 
 @property (nonatomic, readonly, copy) NSString * button1Title;
@@ -25,14 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, copy) UIColor * button2Color;
 
 
-
 @property (nonatomic, readonly, assign) BOOL button1Hidden;
 @property (nonatomic, readonly, assign) BOOL button2Hidden;
 
 @property (nonatomic, readonly, copy) NSString * singleGoodsImage;
 @property (nonatomic, readonly, copy) NSString * singleGoodsName;
 @property (nonatomic, readonly, copy) NSString * goodsNum;
-@property (nonatomic, readonly, copy) NSString * goodsPices;
+@property (nonatomic, readonly, copy) NSAttributedString * goodsPices;
 @property (nonatomic, readonly, copy) NSArray<NSString *> * goodsImages;
 
 @property (nonatomic, readonly, assign) BOOL isSingleGoods;
@@ -42,9 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic ,readonly , copy)NSArray <HHOrderListCellViewModel *> * orderArray;
 
+@property(nonatomic ,readonly, assign)BOOL isLastPage;
 
 - (instancetype)initWithoOderStatus:(NSInteger)orderStatus;
-
 
 - (void)refresh;
 

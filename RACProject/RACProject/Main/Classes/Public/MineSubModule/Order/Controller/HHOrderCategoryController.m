@@ -99,6 +99,17 @@
 - (id<JXCategoryListContentViewDelegate>)listContainerView:(JXCategoryListContainerView *)listContainerView initListForIndex:(NSInteger)index
 {
     HHOrderListController * list = [HHOrderListController new];
+    if (index == 0) {
+        list.selectIndex = 0;
+    }else if (index == 1){
+        list.selectIndex = 5;
+    }else if (index == 2){
+        list.selectIndex = 10;
+    }else if (index == 3){
+        list.selectIndex = 40;
+    }else{
+        list.selectIndex = 42;
+    }
     return list;
 }
 
@@ -114,7 +125,7 @@
         _categoryView.defaultSelectedIndex = self.selectedIndex;
         _categoryView.backgroundColor = [UIColor whiteColor];
         _categoryView.delegate = self;
-        _categoryView.titleSelectedColor = [UIColor colorWithHex:0x0165B8];
+        _categoryView.titleSelectedColor = kThemeColor;
         _categoryView.titleColor = [UIColor colorWithHex:0x222427];
         _categoryView.titleSelectedFont = [UIFont systemFontOfSize:14.f weight:UIFontWeightMedium];
         _categoryView.titleFont = [UIFont systemFontOfSize:14.f weight:UIFontWeightRegular];

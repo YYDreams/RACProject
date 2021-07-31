@@ -6,11 +6,11 @@
 //  Copyright © 2020 flowerflower. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseCollectionViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MineViewController : BaseTableViewController
+@interface MineViewController : BaseCollectionViewController
 
 @end
 

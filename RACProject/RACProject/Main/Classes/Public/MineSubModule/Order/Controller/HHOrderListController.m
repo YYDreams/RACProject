@@ -11,56 +11,96 @@
 #import "HHOrderListViewModel.h"
 @interface HHOrderListController ()
 
+
+
 @property(nonatomic, strong)HHOrderListViewModel *viewModel;
 
 
-
-
 @end
+static NSString * const HHOrderListCellID = @"HHOrderListCellID";
 
 @implementation HHOrderListController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self setupSubView];
     [self bindViewModel];
-    
-
+    [self.viewModel refresh];
     
 }
 
 - (void)setupSubView{
-    [self.tableView registerClass:[HHOrderListCell class] forCellReuseIdentifier:@"UITableViewCell"];
-
+    [self.tableView registerClass:[HHOrderListCell class] forCellReuseIdentifier:HHOrderListCellID];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = SC_DP_375(200);
+    
+    @weakify(self);
+    
+    self.tableView.mj_header = [HHRefreshHeader headerWithRefreshingBlock:^{
+        @strongify(self);
+        [self.viewModel refresh];
+    }];
+    
+    self.tableView.mj_footer = [HHRefreshFooter footerWithRefreshingBlock:^{
+        @strongify(self);
+        [self.viewModel loadMore];
+    }];
     
 }
 
 - (void)bindViewModel{
-
+    
     @weakify(self);
     [RACObserve(self.viewModel, orderArray) subscribeNext:^(id  _Nullable x) {
         @strongify(self);
-        
         [self.tableView reloadData];
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView.mj_footer endRefreshing];
     }];
     
+    [RACObserve(self.viewModel, isLastPage) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        if ([x boolValue]) {
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        }
+    }];
+    
+    [self.viewModel.loadingSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [x boolValue] ? [self showLoadingView]: [self hideLoadingView];
+    }];
+    
+    [self.viewModel.totastSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self showToast:x];
+    }];
+    
+    [self.viewModel.noDataSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [x boolValue] ? [self showNoDataView] : [self hideNoDataView];
+    }];
+    
+    [self.viewModel.networkErrorSubject subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [x boolValue] ? [self showNetworkErrorView] : [self hideNetworkErrorView];
+    }];
+    
+    self.emptyViewTapBlock = ^{
+        @strongify(self);
+        [self.viewModel refresh];
+    };
 }
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.viewModel.orderArray.count;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    HHOrderListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
-    cell.viewModel = self.viewModel.orderArray[indexPath.row];
-    
-//    cell.textLabel.text = @"2";
+    HHOrderListCell *cell = [tableView dequeueReusableCellWithIdentifier:HHOrderListCellID];
+    cell.viewModel = [self.viewModel.orderArray safeObjectAtIndex:indexPath.row];
     return cell;
 }
 #pragma mark - JXPagingViewListViewDelegate
@@ -73,25 +113,8 @@
 }
 
 - (void)listViewDidScrollCallback:(void (^)(UIScrollView *))callback {
-//    self.scrollCallback = callback;
+    //    self.scrollCallback = callback;
 }
-
-- (void)listWillAppear {
-    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
-}
-
-- (void)listDidAppear {
-    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
-}
-
-- (void)listWillDisappear {
-    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
-}
-
-- (void)listDidDisappear {
-    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
-}
-
 
 - (HHOrderListViewModel *)viewModel{
     if (!_viewModel) {

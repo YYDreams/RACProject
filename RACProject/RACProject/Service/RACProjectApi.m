@@ -12,37 +12,34 @@
 @implementation RACProjectApi
 
 
-//用于模拟网络请求
-static NSString *kSimulationUrl =@"http://www.mocky.io/v2/5ea3c9384f00003729d9f9c1";
 
+static NSString *kQueryOrderListUrl = @"http://api-qa.samsclub.cn/api/v1/sams/trade/order/queryOrderList";
 
-+(void)requestForOrderListSimulationWithCompletion:(void(^)(NetworkStatus status,NSArray *listArr, NSDictionary *pageInfo))completion{
++ (void)getOderListModelsWithOrderStatus:(NSInteger)orderStatus
+                                 pageNum:(NSInteger)pageNum
+                             orderScense:(NSInteger)orderScene
+                              completion:(void(^)(NetworkStatus status,
+                                                  NSString * _Nullable errorStr,
+                                                  HHOrderListModel * _Nullable model))completion{
+    NSDictionary *params   = orderStatus == 0 ?
+    @{@"page":@{@"pageNum":@(pageNum),@"pageSize":@(20)},@"orderScene":@(orderScene)} : @{@"orderStatus": @(orderStatus),@"page":@{@"pageNum":@(pageNum),@"pageSize":@(20)},@"orderScene":@(orderScene)};;
+    [HTTPRequest POST:kQueryOrderListUrl parameter:params success:^(id resposeObject) {
+        NetworkResult *result = [NetworkResult objectWithDic:resposeObject];
+        if ([resposeObject[@"success"] boolValue]) {
+            HHOrderListModel *listModel   = [HHOrderListModel objectWithDic:resposeObject[@"data"]];
+            
+            completion(NetworkStatusSuccess,result.msg,listModel);
+        }else{
+            completion(NetworkStatusFailed,result.msg,nil);
+        }
+        
+    } failure:^(NSError *error) {
+        
+    [HTTPRequest isNetworkAvailable] ? completion(NetworkStatusNonet,kNoNetworkTips,nil) :  completion(NetworkStatusError,kNetworkErrorTips,nil);
+     
+    }];
     
-//    [HTTPRequest  GET:kSimulationUrl parameter:nil success:^(id resposeObject) {
-       
-//        if ([resposeObject[@"code"] intValue] == 0) {
-            
-            NSDictionary *dic = [NSDictionary readLocalFileWithName:@"orderList"];
-
-//            NSArray * array = dic [@"data"];
-//            NSMutableArray * temp = @[].mutableCopy;
-//            [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                [temp addObject: [HHOrderListModel objectWithDic:obj]];
-//            }];
-            NSArray *list = [HHOrderListModel objectsInArray:dic[@"data"][@"results"]];
-            
-            
-            completion(NetworkStatusSuccess,list,dic[@"page"]);
-            
-//        }else{
-//            completion(NetworkStatusFailed,nil,nil);
-//        }
-//    } failure:^(NSError *error) {
-//        
-//        completion(NetworkStatusError,nil,nil);
-//        
-//       
-//    }];
-//    
+    
 }
+
 @end

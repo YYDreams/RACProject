@@ -30,5 +30,6 @@ NSString  * const kAwaitTips = @"功能优化中，敬请期待。";
 /*----------------------------------网络提示----------------------------------*/
 NSString  * const kNoNetworkTips = @"当前网络不可用,请检查网络设置";
 
+NSString  * const kNetworkErrorTips = @"服务器异常，请稍后再试";
 
 

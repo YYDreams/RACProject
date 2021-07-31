@@ -19,6 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.title = @"我的订单";
     [self setupView];
     
 }

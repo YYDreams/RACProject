@@ -42,3 +42,13 @@
 
 
 @end
+
+
+@implementation NetworDataModel
+
+@end
+
+
+@implementation NetworkResult
+
+@end
